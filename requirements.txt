@@ -4,4 +4,5 @@ Flask-Login==0.6.3
 python-dotenv==1.1.1
 fpdf2==2.8.4
 requests==2.32.3
-beautifulsoup4==4.13.3  # Add this line
+beautifulsoup4==4.13.3
+praw==7.7.1  # Add this line
