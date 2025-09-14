@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1><i class="fas fa-sign-in-alt"></i> Login to LearnAI</h1>
+            <p>Welcome back! Please enter your details to continue your learning journey.</p>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-custom">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="username" class="form-label">
+                    <i class="fas fa-user"></i> Username
+                </label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">
+                    <i class="fas fa-lock"></i> Password
+                </label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn-auth">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Create one here</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        padding: 20px;
+    }
+
+    .auth-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 40px;
+        box-shadow: var(--shadow-default);
+        width: 100%;
+        max-width: 450px;
+        transition: var(--transition);
+    }
+
+    .auth-card:hover {
+        box-shadow: 0 15px 40px rgba(59, 130, 246, 0.25);
+        transform: translateY(-5px);
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .auth-header h1 {
+        color: var(--primary);
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .auth-header p {
+        color: var(--text-light);
+        font-size: 1rem;
+    }
+
+    .alert-custom {
+        background-color: #fee2e2;
+        color: #dc2626;
+        padding: 12px 16px;
+        border-radius: var(--border-radius);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-left: 4px solid #dc2626;
+    }
+
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .form-control {
+        padding: 14px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+
+    .btn-auth {
+        background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        color: var(--white);
+        padding: 14px;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+        box-shadow: var(--shadow-default);
+    }
+
+    .btn-auth:hover {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        box-shadow: var(--shadow-light);
+        transform: translateY(-3px);
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .auth-footer p {
+        color: var(--text-light);
+        margin: 0;
+    }
+
+    .auth-footer a {
+        color: var(--primary-light);
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .auth-footer a:hover {
+        color: var(--primary);
+        text-decoration: underline;
+    }
+
+    /* Animation for form */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .auth-card {
+        animation: fadeInUp 0.6s ease;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        .auth-card {
+            padding: 30px 20px;
+        }
+
+        .auth-header h1 {
+            font-size: 1.7rem;
+        }
+    }
+</style>
+{% endblock %}

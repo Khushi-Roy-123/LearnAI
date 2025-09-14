@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnAI - {% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* Root variables for color scheme and transitions */
+        :root {
+            --bg-color: #f5f7fa;
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #60a5fa;
+            --text-color: #1f2937;
+            --text-light: #4b5563;
+            --white: #ffffff;
+            --shadow-light: 0 4px 15px rgba(59, 130, 246, 0.3);
+            --shadow-default: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --max-width: 1200px;
+        }
+
+        /* Global reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .custom-container {
+            width: 95%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Links as buttons */
+        a.btn-custom {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: var(--white);
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: var(--shadow-default);
+            transition: var(--transition);
+            cursor: pointer;
+            user-select: none;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            font-size: 1rem;
+            border: none;
+        }
+
+        a.btn-custom:hover,
+        a.btn-custom:focus {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            box-shadow: var(--shadow-light);
+            transform: translateY(-4px) scale(1.05);
+            outline: none;
+            color: var(--white);
+        }
+
+        /* Header & Nav */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow-default);
+            position: sticky;
+            top: 0;
+            z-index: 101;
+            padding: 18px 0;
+            user-select: none;
+        }
+
+        .navbar-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo img {
+            height: 44px;
+            width: auto;
+            border-radius: 8px;
+            user-select: none;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1);
+        }
+
+        .logo-text {
+            font-size: 1.7rem;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 0.12rem;
+            user-select: none;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            color: var(--primary-light);
+            background-color: rgba(59, 130, 246, 0.15);
+            outline: none;
+            transform: scale(1.05);
+        }
+
+        /* Auth buttons */
+        .auth-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .auth-buttons .btn-custom {
+            padding: 10px 24px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 30px;
+            background: var(--primary-light);
+        }
+
+        .auth-buttons .btn-custom:hover {
+            background: var(--primary);
+        }
+
+        /* Content area styling */
+        .content-container {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 36px 28px;
+            box-shadow: var(--shadow-default);
+            margin: 40px auto;
+            transition: var(--transition);
+        }
+
+        .content-container:hover {
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.25);
+        }
+
+        /* Chat container styling */
+        .chat-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            background-color: #f9fafb;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-break: break-word;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: var(--white);
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            background-color: #e5e7eb;
+            color: var(--text-color);
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Form styling */
+        .form-control {
+            border-radius: 50px;
+            padding: 12px 20px;
+            border: 2px solid #e5e7eb;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+        }
+
+        /* Button styling */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        /* Card styling */
+        .card-custom {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-default);
+            transition: var(--transition);
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .card-custom:hover {
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.25);
+            transform: translateY(-5px);
+        }
+
+        /* List group styling */
+        .list-group-item {
+            border: none;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            word-break: break-word;
+        }
+
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-group-item:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Loading Overlay Styles */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tech-names {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .tech-names span {
+            position: absolute;
+            font-size: 2rem;
+            color: #64ffda;
+            opacity: 0.18;
+            user-select: none;
+            white-space: nowrap;
+            will-change: transform;
+            transition: transform 6s linear;
+        }
+
+        .loading-center {
+            background: #fff;
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            z-index: 2;
+        }
+
+        .loading-title {
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .loading-steps {
+            margin-bottom: 30px;
+        }
+
+        .step {
+            font-size: 1.2rem;
+            color: #8892b0;
+            margin: 8px 0;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .step.active {
+            color: #64ffda;
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        .loading-bar {
+            width: 320px;
+            height: 12px;
+            background: #233554;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .loading-progress {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #64ffda, #00bcd4);
+            border-radius: 8px;
+            transition: width 0.5s;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .navbar-custom {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .logo-text {
+                font-size: 1.4rem;
+            }
+
+            .nav-links {
+                font-size: 1rem;
+            }
+
+            .content-container {
+                padding: 24px 16px;
+            }
+
+            .chat-message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="custom-container">
+            <div class="navbar-custom">
+                <div class="logo" onclick="window.location.href='{{ url_for('dashboard') }}'" tabindex="0"
+                    aria-label="LearnAI Logo and Home Link">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="LearnAI Logo" />
+                    <div class="logo-text">LearnAI</div>
+                </div>
+
+                <div class="nav-links">
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <!-- Add other navigation links as needed -->
+                </div>
+
+                <div class="auth-buttons">
+                    {% if current_user.is_authenticated %}
+                    <span style="font-weight:600; margin-right:12px;">{{ current_user.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn-custom" tabindex="0">Logout</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn-custom" tabindex="0">Login</a>
+                    <a href="{{ url_for('register') }}" class="btn-custom" tabindex="0">Signup</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="custom-container">
+        <div class="content-container">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <div id="loading-overlay" style="display:none;">
+        <div class="loading-center">
+            <div class="loading-title">Loading...</div>
+            <div class="loading-steps">
+                <div class="step" id="step1">Crawling Internet</div>
+                <div class="step" id="step2">Reading Comments</div>
+                <div class="step" id="step3">Processing Comments</div>
+                <div class="step" id="step4">Giving Score</div>
+                <div class="step" id="step5">Getting Things Ready</div>
+            </div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        // Animate content on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentContainer = document.querySelector('.content-container');
+
+            if (contentContainer) {
+                contentContainer.style.opacity = 0;
+                contentContainer.style.transform = 'translateY(20px)';
+                contentContainer.style.transition = 'opacity 3s ease, transform 0.6s ease';
+
+                setTimeout(() => {
+                    contentContainer.style.opacity = 1;
+                    contentContainer.style.transform = 'translateY(0)';
+                }, 300);
+            }
+        });
+
+        function randomBetween(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // Get the bounding box of the loading center
+        function getLoadingBoxRect() {
+            const box = document.querySelector('.loading-center');
+            return box ? box.getBoundingClientRect() : {
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: 0,
+                width: 0,
+                height: 0
+            };
+        }
+
+        // Check if two rectangles overlap
+        function isOverlap(rect1, rect2) {
+            return !(rect1.right < rect2.left ||
+                rect1.left > rect2.right ||
+                rect1.bottom < rect2.top ||
+                rect1.top > rect2.bottom);
+        }
+
+        // Generate a random position that doesn't collide with others or the loading box
+        function getSafePosition(existingRects, boxRect, spanWidth, spanHeight) {
+            let tries = 0;
+            while (tries < 100) {
+                const x = randomBetween(0, window.innerWidth - spanWidth);
+                const y = randomBetween(0, window.innerHeight - spanHeight);
+                const rect = {
+                    left: x,
+                    top: y,
+                    right: x + spanWidth,
+                    bottom: y + spanHeight
+                };
+                // Avoid loading box
+                if (isOverlap(rect, boxRect)) {
+                    tries++;
+                    continue;
+                }
+                // Avoid other tech names
+                let collision = false;
+                for (const r of existingRects) {
+                    if (isOverlap(rect, r)) {
+                        collision = true;
+                        break;
+                    }
+                }
+                if (!collision) return {
+                    x,
+                    y,
+                    rect
+                };
+                tries++;
+            }
+            // Fallback: just return somewhere
+            return {
+                x: randomBetween(0, window.innerWidth - spanWidth),
+                y: randomBetween(0, window.innerHeight - spanHeight),
+                rect: null
+            };
+        }
+
+        function setInitialPositions(spans, boxRect) {
+            let existingRects = [];
+            spans.forEach(span => {
+                const spanWidth = span.offsetWidth || 160;
+                const spanHeight = span.offsetHeight || 40;
+                const pos = getSafePosition(existingRects, boxRect, spanWidth, spanHeight);
+                span.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+                if (pos.rect) existingRects.push(pos.rect);
+            });
+        }
+
+        function animateTechNames() {
+            const techSpans = document.querySelectorAll('.tech-names span');
+            const boxRect = getLoadingBoxRect();
+            setInitialPositions(techSpans, boxRect);
+
+            function moveSpan(span) {
+                const spanWidth = span.offsetWidth || 160;
+                const spanHeight = span.offsetHeight || 40;
+                const boxRect = getLoadingBoxRect();
+                // Get positions of other spans
+                const otherRects = Array.from(document.querySelectorAll('.tech-names span'))
+                    .filter(s => s !== span)
+                    .map(s => {
+                        const m = s.style.transform.match(/translate\(([\d.]+)px, ([\d.]+)px\)/);
+                        if (m) {
+                            return {
+                                left: parseFloat(m[1]),
+                                top: parseFloat(m[2]),
+                                right: parseFloat(m[1]) + (s.offsetWidth || 160),
+                                bottom: parseFloat(m[2]) + (s.offsetHeight || 40)
+                            };
+                        }
+                        return null;
+                    }).filter(Boolean);
+                const pos = getSafePosition(otherRects, boxRect, spanWidth, spanHeight);
+                const duration = randomBetween(4000, 9000);
+                span.style.transition = `transform ${duration}ms linear`;
+                span.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+                setTimeout(() => moveSpan(span), duration);
+            }
+
+            techSpans.forEach(span => {
+                setTimeout(() => moveSpan(span), 100);
+            });
+        }
+
+        function showLoadingOverlay() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+            animateTechNames();
+            // Optionally, reset steps/progress here
+            let steps = [
+                {
+                    id: 'step1',
+                    text: 'Crawling Internet'
+                },
+                {
+                    id: 'step2',
+                    text: 'Reading Comments'
+                },
+                {
+                    id: 'step3',
+                    text: 'Processing Comments'
+                },
+                {
+                    id: 'step4',
+                    text: 'Giving Score'
+                },
+                {
+                    id: 'step5',
+                    text: 'Making Things Ready'
+                }
+            ];
+            let progress = document.querySelector('.loading-progress');
+            let stepIndex = 0;
+
+            function nextStep() {
+                steps.forEach((s, i) => {
+                    let el = document.getElementById(s.id);
+                    if (el) el.classList.toggle('active', i === stepIndex);
+                });
+                if (progress) progress.style.width = ((stepIndex + 1) / steps.length * 100) + '%';
+                stepIndex++;
+                if (stepIndex < steps.length) {
+                    setTimeout(nextStep, 1200);
+                }
+            }
+            nextStep();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let searchForm = document.getElementById('course-search-form');
+            if (searchForm) {
+                searchForm.addEventListener('submit', function (e) {
+                    showLoadingOverlay();
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

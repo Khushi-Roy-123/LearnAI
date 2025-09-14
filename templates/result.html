@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+{% block title %}Search Results for "{{ query }}"{% endblock %}
+{% block content %}
+<div class="search-results-container">
+    <div class="search-header">
+        <h1><i class="fas fa-search"></i> Search Results for "{{ query }}"</h1>
+        <p class="search-subtitle">We found the best learning opportunities for you</p>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-custom">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>
+    {% else %}
+    <!-- Best Course Section -->
+    <div class="section-header">
+        <h2><i class="fas fa-star"></i> Recommended Course</h2>
+        <p>Our top recommendation based on ratings, reviews, and relevance</p>
+    </div>
+
+    <div class="course-card featured">
+        <div class="course-badge">Best Match</div>
+        <div class="course-content">
+            <h3 class="course-title">{{ best_course.name }}</h3>
+            <div class="course-meta">
+                <span class="meta-item"><i class="fas fa-building"></i> {{ best_course.provider }}</span>
+                {% if best_course.institution %}
+                <span class="meta-item"><i class="fas fa-university"></i> {{ best_course.institution }}</span>
+                {% endif %}
+                <span class="meta-item"><i class="fas fa-clock"></i> {{ best_course.workload }}</span>
+                <span class="meta-item"><i class="fas fa-calendar"></i> {{ best_course.start_date }}</span>
+                <span class="meta-item"><i class="fas fa-tag"></i> {{ best_course.pricing }}</span>
+            </div>
+            <p class="course-description">{{ best_course.description }}</p>
+            <div class="course-rating">
+                <div class="stars">
+                    {% for i in range(5) %}
+                    {% if i < best_course.cc_rating | int %} <i class="fas fa-star"></i>
+                        {% else %}
+                        <i class="far fa-star"></i>
+                        {% endif %}
+                        {% endfor %}
+                        <span class="rating-text">{{ best_course.cc_rating }} ({{ best_course.cc_num_reviews }}
+                            reviews)</span>
+                </div>
+            </div>
+            <div class="course-actions">
+                <a href="{{ best_course.direct_link }}" target="_blank" class="btn-primary">
+                    <i class="fas fa-external-link-alt"></i> Enroll Now
+                </a>
+                <a href="{{ url_for('chat', course_name=best_course.name) }}" class="btn-secondary">
+                    <i class="fas fa-road"></i> Customize Timeline
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Other Courses Section -->
+    {% if other_courses %}
+    <div class="section-header">
+        <h2><i class="fas fa-list"></i> Other Courses</h2>
+        <p>More learning options that match your search</p>
+    </div>
+
+    <div class="courses-grid">
+        {% for course in other_courses %}
+        <div class="course-card">
+            <div class="course-content">
+                <h3 class="course-title">{{ course.name }}</h3>
+                <div class="course-meta">
+                    <span class="meta-item"><i class="fas fa-building"></i> {{ course.provider }}</span>
+                    {% if course.institution %}
+                    <span class="meta-item"><i class="fas fa-university"></i> {{ course.institution }}</span>
+                    {% endif %}
+                    <span class="meta-item"><i class="fas fa-clock"></i> {{ course.workload }}</span>
+                    <span class="meta-item"><i class="fas fa-calendar"></i> {{ course.start_date }}</span>
+                    <span class="meta-item"><i class="fas fa-tag"></i> {{ course.pricing }}</span>
+                </div>
+                <p class="course-description">{{ course.description }}</p>
+                <div class="course-rating">
+                    <div class="stars">
+                        {% for i in range(5) %}
+                        {% if i < course.cc_rating | int %} <i class="fas fa-star"></i>
+                            {% else %}
+                            <i class="far fa-star"></i>
+                            {% endif %}
+                            {% endfor %}
+                            <span class="rating-text">{{ course.cc_rating }} ({{ course.cc_num_reviews }}
+                                reviews)</span>
+                    </div>
+                </div>
+                <div class="course-actions">
+                    <a href="{{ course.direct_link }}" target="_blank" class="btn-primary">
+                        <i class="fas fa-external-link-alt"></i> Enroll
+                    </a>
+                    <a href="{{ url_for('course', course_name=course.name) }}" class="btn-secondary">
+                        <i class="fas fa-info-circle"></i> Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Learning Timeline Section -->
+    <div class="section-header">
+        <h2><i class="fas fa-road"></i> Learning Timeline</h2>
+        <p>Your personalized roadmap to master this subject</p>
+    </div>
+
+    <div class="timeline-container">
+        {{ timeline | safe }}
+    </div>
+    {% endif %} <!-- THIS WAS MISSING - ADD THIS LINE -->
+</div>
+
+<style>
+    .search-results-container {
+        animation: fadeIn 0.6s ease;
+    }
+
+    .search-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .search-header h1 {
+        color: var(--primary);
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .search-subtitle {
+        color: var(--text-light);
+        font-size: 1.1rem;
+    }
+
+    .section-header {
+        margin: 50px 0 30px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .section-header h2 {
+        color: var(--primary);
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-header p {
+        color: var(--text-light);
+        margin: 0;
+    }
+
+    .alert-custom {
+        background-color: #fee2e2;
+        color: #dc2626;
+        padding: 16px 20px;
+        border-radius: var(--border-radius);
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-left: 4px solid #dc2626;
+    }
+
+    .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .course-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 25px;
+        box-shadow: var(--shadow-default);
+        transition: var(--transition);
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-card.featured {
+        border: 2px solid var(--primary-light);
+        transform: scale(1.02);
+    }
+
+    .course-card:hover {
+        box-shadow: 0 15px 40px rgba(59, 130, 246, 0.25);
+        transform: translateY(-5px);
+    }
+
+    .course-badge {
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        color: var(--white);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        box-shadow: var(--shadow-default);
+    }
+
+    .course-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-title {
+        color: var(--primary);
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .course-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        color: var(--text-light);
+        background-color: #f9fafb;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+
+    .course-description {
+        color: var(--text-color);
+        line-height: 1.5;
+        margin-bottom: 15px;
+        flex: 1;
+    }
+
+    .course-rating {
+        margin-bottom: 20px;
+    }
+
+    .stars {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .stars i {
+        color: #f59e0b;
+    }
+
+    .rating-text {
+        margin-left: 8px;
+        font-weight: 600;
+        color: var(--text-light);
+    }
+
+    .course-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: auto;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        color: var(--white);
+        padding: 10px 18px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        box-shadow: var(--shadow-default);
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        box-shadow: var(--shadow-light);
+        transform: translateY(-2px);
+        color: var(--white);
+    }
+
+    .btn-secondary {
+        background-color: #e5e7eb;
+        color: var(--text-color);
+        padding: 10px 18px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+    }
+
+    .btn-secondary:hover {
+        background-color: #d1d5db;
+        transform: translateY(-2px);
+        color: var(--text-color);
+    }
+
+    .timeline-container {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 30px;
+        box-shadow: var(--shadow-default);
+        margin-bottom: 40px;
+    }
+
+    .timeline-content {
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+
+    .timeline-steps {
+        padding-left: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .timeline-step {
+        padding: 15px 20px;
+        background-color: #f9fafb;
+        border-radius: var(--border-radius);
+        border-left: 4px solid var(--primary-light);
+        transition: var(--transition);
+    }
+
+    .timeline-step:hover {
+        background-color: rgba(59, 130, 246, 0.1);
+        transform: translateX(5px);
+    }
+
+    /* Add these styles to your existing CSS */
+    .timeline-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 0.9rem;
+        box-shadow: var(--shadow-default);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+
+    .timeline-table th {
+        background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        color: var(--white);
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .timeline-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: top;
+    }
+
+    .timeline-table tr:nth-child(even) {
+        background-color: #f9fafb;
+    }
+
+    .timeline-table tr:hover {
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .timeline-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Style for week headers */
+    .timeline-table td:first-child {
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    /* Responsive table */
+    @media (max-width: 768px) {
+        .timeline-table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .timeline-table th,
+        .timeline-table td {
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Animation for content */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .courses-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .course-meta {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .course-actions {
+            flex-direction: column;
+        }
+
+        .search-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    .timeline-section {
+        margin: 40px 0;
+    }
+
+    .timeline-section h2 {
+        color: var(--primary);
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        position: relative;
+        display: inline-block;
+    }
+
+    .timeline-section h2:after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    }
+</style>
+{% endblock %}

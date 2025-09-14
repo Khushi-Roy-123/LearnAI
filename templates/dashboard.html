@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="content-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Welcome to LearnAI, {% if current_user.is_authenticated %}{{ current_user.username }}{% endif
+            %}</h1>
+        <div class="header-icon">
+            <i class="fas fa-graduation-cap fa-2x"></i>
+        </div>
+    </div>
+
+    <div class="card-custom mb-4">
+        <div class="card-body">
+            <h5 class="mb-3"><i class="fas fa-search me-2"></i>Find Your Next Course</h5>
+            <form id="course-search-form" method="POST" action="{{ url_for('recommend') }}">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="query"
+                        placeholder="Search for a course (e.g., Python, Machine Learning, Web Development)" required>
+                    <button type="submit" class="btn-custom">
+                        <i class="fas fa-search me-1"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-body">
+            <h5 class="mb-3"><i class="fas fa-book me-2"></i>Your Courses</h5>
+            {% if queries %}
+            <div class="course-list">
+                {% for query in queries %}
+                <div class="course-item">
+                    <div class="course-info">
+                        <a href="{{ url_for('course', course_name=query.course_name) }}" class="course-link">
+                            <i class="fas fa-arrow-right me-2"></i> {{ query.course_name }}
+                        </a>
+                        <div class="course-meta">
+                            <span class="search-query">Searched for: "{{ query.query_text }}"</span>
+                            <span class="search-date">{{ query.timestamp.strftime('%Y-%m-%d') }}</span>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <a href="{{ url_for('course', course_name=query.course_name) }}" class="btn-action">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-book-open fa-3x mb-3"></i>
+                <p>No courses searched yet.</p>
+                <p class="text-muted">Start by searching for a course above!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .content-container {
+        animation: fadeIn 0.6s ease;
+    }
+
+    .header-icon {
+        color: var(--primary-light);
+    }
+
+    .card-custom {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 28px;
+        box-shadow: var(--shadow-default);
+        transition: var(--transition);
+        border: none;
+        margin-bottom: 24px;
+    }
+
+    .card-custom:hover {
+        box-shadow: 0 15px 40px rgba(59, 130, 246, 0.25);
+        transform: translateY(-5px);
+    }
+
+    .input-group {
+        box-shadow: var(--shadow-default);
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+    .form-control {
+        border-radius: 50px;
+        padding: 14px 20px;
+        border: 2px solid #e5e7eb;
+        transition: var(--transition);
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+    }
+
+    .btn-custom {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        color: var(--white);
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: var(--shadow-default);
+        transition: var(--transition);
+        cursor: pointer;
+        user-select: none;
+        border: none;
+        text-transform: none;
+        letter-spacing: normal;
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+
+    .btn-custom:hover {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        box-shadow: var(--shadow-light);
+        transform: translateY(-3px);
+        color: var(--white);
+    }
+
+    .course-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .course-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background-color: #f9fafb;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+    }
+
+    .course-item:hover {
+        background-color: rgba(59, 130, 246, 0.1);
+        transform: translateX(5px);
+    }
+
+    .course-info {
+        flex: 1;
+    }
+
+    .course-link {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary);
+        text-decoration: none;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+    }
+
+    .course-link:hover {
+        color: var(--primary-light);
+    }
+
+    .course-meta {
+        display: flex;
+        gap: 16px;
+        margin-top: 8px;
+        font-size: 0.9rem;
+    }
+
+    .search-query {
+        color: var(--text-light);
+        font-style: italic;
+    }
+
+    .search-date {
+        color: var(--primary-light);
+        font-weight: 500;
+    }
+
+    .course-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--white);
+        color: var(--primary);
+        text-decoration: none;
+        box-shadow: var(--shadow-default);
+        transition: var(--transition);
+    }
+
+    .btn-action:hover {
+        background-color: var(--primary);
+        color: var(--white);
+        transform: translateY(-2px);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-light);
+    }
+
+    .empty-state i {
+        color: var(--primary-light);
+        opacity: 0.7;
+    }
+
+    /* Animation for content */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .course-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .course-meta {
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .course-actions {
+            align-self: flex-end;
+        }
+    }
+</style>
+{% endblock %}

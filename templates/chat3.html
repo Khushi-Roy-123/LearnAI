@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - {{ course_name }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* Root variables for color scheme and transitions */
+        :root {
+            --bg-color: #f5f7fa;
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #60a5fa;
+            --text-color: #1f2937;
+            --text-light: #4b5563;
+            --white: #ffffff;
+            --shadow-light: 0 4px 15px rgba(59, 130, 246, 0.3);
+            --shadow-default: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --max-width: 1200px;
+        }
+
+        /* Global reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-default);
+        }
+
+        /* Header styles */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        /* Navigation links */
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Timeline section */
+        .timeline-section {
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #f9fafb;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-default);
+        }
+
+        .timeline-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-default);
+        }
+
+        .timeline-table th {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: var(--white);
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .timeline-table td {
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+            background-color: var(--white);
+            vertical-align: top;
+        }
+
+        .timeline-table tr:nth-child(even) td {
+            background-color: #f9fafb;
+        }
+
+        .timeline-table tr:hover td {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .timeline-table code {
+            background-color: #e8ecef;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Chat section */
+        .chat-section {
+            margin-top: 40px;
+        }
+
+        .chat-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: var(--border-radius);
+            border: 1px solid #e5e7eb;
+        }
+
+        .chat-message {
+            margin-bottom: 20px;
+            padding: 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-break: break-word;
+            box-shadow: var(--shadow-default);
+        }
+
+        .chat-message.user {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: var(--white);
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.bot {
+            background-color: #e5e7eb;
+            color: var(--text-color);
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-message p {
+            margin: 0 0 8px 0;
+        }
+
+        .chat-message p:last-child {
+            margin-bottom: 0;
+        }
+
+        .chat-message strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .chat-message small {
+            opacity: 0.8;
+            font-size: 0.8rem;
+        }
+
+        /* Chat form */
+        .chat-form {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .chat-form input[type="text"] {
+            flex-grow: 1;
+            padding: 14px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .chat-form input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+
+        .chat-form button {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-default);
+        }
+
+        .chat-form button:hover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            box-shadow: var(--shadow-light);
+            transform: translateY(-2px);
+        }
+
+        /* Download button */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--shadow-default);
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            box-shadow: var(--shadow-light);
+            transform: translateY(-2px);
+            color: var(--white);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+            }
+
+            .chat-message {
+                max-width: 90%;
+            }
+
+            .chat-form {
+                flex-direction: column;
+            }
+
+            .chat-form button {
+                justify-content: center;
+            }
+
+            .timeline-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-graduation-cap"></i> {{ course_name }} Learning Timeline</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                <a href="{{ url_for('download_timeline', course_name=course_name) }}" class="download-btn">
+                    <i class="fas fa-download"></i> Download PDF
+                </a>
+            </div>
+        </div>
+
+        <div class="timeline-section">
+            <h2><i class="fas fa-road"></i> Your Learning Path</h2>
+            <div id="timeline">
+                <!-- Timeline will be rendered as a table here -->
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <h2><i class="fas fa-comments"></i> Chat History</h2>
+            <div class="chat-messages">
+                {% for chat in chats %}
+                <div class="chat-message user">
+                    <p><strong>You:</strong> {{ chat.chat_query }}</p>
+                    <div class="chat-message bot">
+                        <p><strong>LearnAI:</strong> {{ chat.response }}</p>
+                        <small>{{ chat.timestamp }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="chat-form">
+                <form id="chat-form" action="{{ url_for('chat', course_name=course_name) }}" method="POST">
+                    <input type="text" name="query"
+                        placeholder="Ask about the timeline (e.g., 'shorten step 2 to 1 week')..." required>
+                    <button type="submit"><i class="fas fa-paper-plane"></i> Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Parse the timeline HTML and convert it to a table
+        function renderTimeline(timelineHtml) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(timelineHtml, 'text/html');
+            const timelineDiv = document.getElementById('timeline');
+
+            // Create table
+            const table = document.createElement('table');
+            table.className = 'timeline-table';
+            const headerRow = document.createElement('tr');
+            const headers = ['Time in Weeks', 'What to Learn'];
+
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // Extract headings and their content
+            let currentRow = null;
+            let time = '';
+            let content = [];
+
+            const elements = doc.body.querySelectorAll('h1, h2, p, ul, li, code');
+            elements.forEach(el => {
+                if (el.tagName === 'H1' || el.tagName === 'H2') {
+                    // Finish the previous row if it exists
+                    if (currentRow && content.length > 0) {
+                        const tdTime = document.createElement('td');
+                        tdTime.textContent = time || 'N/A';
+                        currentRow.appendChild(tdTime);
+
+                        const tdContent = document.createElement('td');
+                        tdContent.innerHTML = content.join('<br>');
+                        currentRow.appendChild(tdContent);
+
+                        table.appendChild(currentRow);
+                    }
+
+                    // Start a new row
+                    currentRow = document.createElement('tr');
+                    content = [];
+
+                    // Extract time from heading (e.g., "(1 week)" or "2-3 weeks")
+                    const headingText = el.textContent;
+                    const timeMatch = headingText.match(/\((\d+(?:-\d+)?\s*(?:week|month)s?)\)/) || [];
+                    time = timeMatch[1] || '';
+
+                    content.push(`<strong>${headingText.replace(/\(.*?\)/, '').trim()}</strong>`);
+                } else if (currentRow) {
+                    // Add content (paragraphs, lists, etc.)
+                    if (el.tagName === 'P') {
+                        content.push(el.textContent.trim());
+                    } else if (el.tagName === 'UL') {
+                        const items = Array.from(el.querySelectorAll('li')).map(li => `• ${li.textContent.trim()}`);
+                        content.push(...items);
+                    } else if (el.tagName === 'LI') {
+                        content.push(`• ${el.textContent.trim()}`);
+                    } else if (el.tagName === 'CODE') {
+                        content.push(`<code>${el.textContent.trim()}</code>`);
+                    }
+                }
+            });
+
+            // Append the last row
+            if (currentRow && content.length > 0) {
+                const tdTime = document.createElement('td');
+                tdTime.textContent = time || 'N/A';
+                currentRow.appendChild(tdTime);
+
+                const tdContent = document.createElement('td');
+                tdContent.innerHTML = content.join('<br>');
+                currentRow.appendChild(tdContent);
+
+                table.appendChild(currentRow);
+            }
+
+            // Clear existing content and append table
+            timelineDiv.innerHTML = '';
+            timelineDiv.appendChild(table);
+        }
+
+        // Initial rendering of the timeline
+        renderTimeline(`{{ timeline | safe }}`);
+
+        // Handle form submission with AJAX
+        document.getElementById('chat-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const query = form.query.value;
+            const chatMessages = document.querySelector('.chat-messages');
+
+            // Add user message immediately
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'chat-message user';
+            userMessageDiv.innerHTML = `<p><strong>You:</strong> ${query}</p>`;
+            chatMessages.appendChild(userMessageDiv);
+
+            // Add loading indicator for bot response
+            const botMessageDiv = document.createElement('div');
+            botMessageDiv.className = 'chat-message bot';
+            botMessageDiv.innerHTML = `<p><strong>LearnAI:</strong> <i class="fas fa-spinner fa-spin"></i> Thinking...</p>`;
+            chatMessages.appendChild(botMessageDiv);
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ message: query })
+                });
+
+                const data = await response.json();
+
+                if (data.timeline) {
+                    // Update timeline
+                    renderTimeline(data.timeline);
+
+                    // Update bot message
+                    botMessageDiv.innerHTML = `
+                        <p><strong>LearnAI:</strong> ${data.response}</p>
+                        <small>${new Date().toLocaleString()}</small>
+                    `;
+                } else if (data.error) {
+                    botMessageDiv.innerHTML = `<p><strong>LearnAI:</strong> Error: ${data.error}</p>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                botMessageDiv.innerHTML = `<p><strong>LearnAI:</strong> Sorry, there was an error processing your request.</p>`;
+            }
+
+            // Clear input field
+            form.query.value = '';
+
+            // Scroll to bottom again
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+    </script>
+</body>
+
+</html>

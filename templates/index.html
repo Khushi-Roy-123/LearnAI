@@ -1,0 +1,764 @@
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LearnAI - Your AI-Powered Learning Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* Root variables for color scheme and transitions */
+        :root {
+            --bg-color: #f5f7fa;
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #60a5fa;
+            --text-color: #1f2937;
+            --text-light: #4b5563;
+            --white: #ffffff;
+            --shadow-light: 0 4px 15px rgba(59, 130, 246, 0.3);
+            --shadow-default: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --max-width: 1200px;
+        }
+
+        /* Global reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 95%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Links as buttons */
+        a.btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: var(--white);
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: var(--shadow-default);
+            transition: var(--transition);
+            cursor: pointer;
+            user-select: none;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            font-size: 1rem;
+        }
+
+        a.btn:hover,
+        a.btn:focus {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            box-shadow: var(--shadow-light);
+            transform: translateY(-4px) scale(1.05);
+            outline: none;
+        }
+
+        /* Section title styling */
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--primary);
+            user-select: none;
+        }
+
+        .section-title h2 {
+            font-size: 2.7rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: 0.05rem;
+            line-height: 1.1;
+            text-transform: uppercase;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .section-title p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 500;
+            color: var(--text-light);
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        /* Header & Nav */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow-default);
+            position: sticky;
+            top: 0;
+            z-index: 101;
+            padding: 18px 0;
+            user-select: none;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo img {
+            height: 44px;
+            width: auto;
+            border-radius: 8px;
+            user-select: none;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1);
+        }
+
+        .logo-text {
+            font-size: 1.7rem;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 0.12rem;
+            user-select: none;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            color: var(--primary-light);
+            background-color: rgba(59, 130, 246, 0.15);
+            outline: none;
+            transform: scale(1.05);
+        }
+
+        /* Auth buttons */
+        .auth-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .auth-buttons .btn {
+            padding: 10px 24px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 30px;
+            background: var(--primary-light);
+        }
+
+        .auth-buttons .btn:hover {
+            background: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(30, 58, 138, 0.85),
+                    rgba(30, 58, 138, 0.85)),
+                url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1351&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 110px 0 140px;
+            text-align: center;
+            user-select: none;
+        }
+
+        .hero-content {
+            max-width: 850px;
+            margin: 0 auto;
+            animation: fadeInDown 1s ease forwards;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: 0.12rem;
+            line-height: 1.05;
+        }
+
+        .hero p {
+            font-size: 1.35rem;
+            font-weight: 500;
+            margin-bottom: 40px;
+            letter-spacing: 0.03rem;
+            color: #d1d5db;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 36px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 36px 28px;
+            box-shadow: var(--shadow-default);
+            transition: var(--transition);
+            text-align: center;
+            cursor: default;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .feature-card:hover,
+        .feature-card:focus-within {
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.25);
+            transform: translateY(-15px) scale(1.05);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-light);
+            transition: color 0.5s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            color: var(--primary);
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0;
+            color: var(--primary);
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        /* Enroll Section */
+        .enroll {
+            background: var(--primary);
+            color: var(--white);
+            padding: 90px 0;
+            text-align: center;
+            user-select: none;
+        }
+
+        .enroll h2 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 22px;
+            text-transform: uppercase;
+            letter-spacing: 0.06rem;
+        }
+
+        .enroll p {
+            font-size: 1.3rem;
+            font-weight: 600;
+            max-width: 720px;
+            margin: 0 auto 38px;
+            color: #dbeafe;
+        }
+
+        /* Team Section */
+        .team {
+            padding: 90px 0;
+            text-align: center;
+            user-select: none;
+        }
+
+        .team-members {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .team-member {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 32px 20px 38px;
+            box-shadow: var(--shadow-default);
+            transition: var(--transition);
+            max-width: 280px;
+            text-align: center;
+            cursor: default;
+        }
+
+        .team-member:hover,
+        .team-member:focus-within {
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.25);
+            transform: translateY(-8px);
+        }
+
+        .team-member img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 22px;
+            border: 4px solid var(--primary-light);
+            transition: border-color 0.3s ease;
+        }
+
+        .team-member:hover img {
+            border-color: var(--primary);
+        }
+
+        .team-member h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .team-member p {
+            font-size: 1.1rem;
+            color: var(--primary-light);
+            font-weight: 600;
+            margin-bottom: 0;
+            user-select: none;
+        }
+
+        .motivation {
+            margin-top: 38px;
+            font-style: italic;
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--primary);
+            user-select: none;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 56px 0 30px;
+            font-size: 0.9rem;
+            user-select: none;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 50px;
+            margin-bottom: 38px;
+        }
+
+        .footer-info,
+        .footer-links,
+        .contact-info {
+            flex: 1 1 200px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .footer-logo img {
+            height: 44px;
+            width: auto;
+            user-select: none;
+        }
+
+        .footer-logo .logo-text {
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: var(--white);
+            letter-spacing: 0.1rem;
+        }
+
+        .footer-info p {
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+
+        .footer-links h3,
+        .contact-info h3 {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 14px;
+            color: var(--white);
+        }
+
+        .footer-links a {
+            display: inline-block;
+            color: #dbeafe;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover,
+        .footer-links a:focus {
+            color: var(--secondary);
+            outline: none;
+        }
+
+        .contact-info p {
+            margin-bottom: 0;
+            color: #dbeafe;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            font-weight: 500;
+            user-select: none;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+            }
+
+            .team-members {
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .section-title p,
+            .enroll p {
+                font-size: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .team-members {
+                flex-direction: column;
+                gap: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <div class="navbar">
+                <div class="logo" tabindex="0" aria-label="LearnAI Logo and Home Link">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="LearnAI Logo" />
+                    <div class="logo-text">LearnAI</div>
+                </div>
+
+                <div class="nav-links">
+                    <a href="#Home">Home</a>
+                    <a href="#Features">Features</a>
+                    <a href="#Team">Team</a>
+
+                </div>
+
+                <div class="auth-buttons">
+                                    {% if current_user.is_authenticated %}
+                                        <span style="font-weight:600; margin-right:12px;">{{ current_user.username }}</span>
+                                        <a href="{{ url_for('dashboard') }}" class="btn" tabindex="0">Dashboard</a>
+                                        <a href="{{ url_for('logout') }}" class="btn" tabindex="0">Logout</a>
+                                    {% else %}
+                                        <a href="{{ url_for('login') }}" class="btn" tabindex="0">Login</a>
+                                        <a href="{{ url_for('register') }}" class="btn" tabindex="0">Signup</a>
+                                    {% endif %}
+                                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="Home">
+        <div class="container">
+            <div class="hero-content">
+                                <h1>LearnAI</h1>
+                                <p>Your AI-powered learning companion that provides comprehensive course information, personalized
+                                        roadmaps, and career guidance.</p>
+                                {% if current_user.is_authenticated %}
+                                    <a href="{{ url_for('dashboard') }}" class="btn">Go to Dashboard</a>
+                                {% else %}
+                                    <a href="{{ url_for('login') }}" class="btn">Getting Started</a>
+                                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="Features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Features</h2>
+                <p>Discover how LearnAI transforms your learning journey with cutting-edge technology</p>
+            </div>
+
+            <div class="features-grid">
+                <article class="feature-card" tabindex="0" aria-label="Mind-Blowing Course Discovery">
+                    <div class="feature-icon" aria-hidden="true">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Mind-Blowing Course Discovery</h3>
+                    <p>Uses Class Central for diverse, top-quality courses across all platforms.</p>
+                </article>
+
+                <article class="feature-card" tabindex="0" aria-label="Reddit-Powered Sentiment Analysis">
+                    <div class="feature-icon" aria-hidden="true">
+                        <i class="fas fa-reddit-alien"></i>
+                    </div>
+                    <h3>Powered Sentiment Analysis</h3>
+                    <p>PRAW for authentic Reddit community feedback blended with Class Central ratings.</p>
+                </article>
+
+                <article class="feature-card" tabindex="0" aria-label="Gemini AI-Driven Learning Plans">
+                    <div class="feature-icon" aria-hidden="true">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI-Driven Learning Plans</h3>
+                    <p>Flash for personalized roadmaps with subtopics & timelines.</p>
+                </article>
+
+                <article class="feature-card" tabindex="0" aria-label="Chat Bot">
+                    <div class="feature-icon" aria-hidden="true">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <h3>Chat Bot</h3>
+                    <p>Personalized assistant to guide you through your learning journey.</p>
+                </article>
+
+                <article class="feature-card" tabindex="0" aria-label="Career Options">
+                    <div class="feature-icon" aria-hidden="true">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3>Career Options</h3>
+                    <p>Suggests jobs & career paths after completing a course.</p>
+                </article>
+
+                <article class="feature-card" tabindex="0" aria-label="Direct-to-Source Links">
+                    <div class="feature-icon" aria-hidden="true">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3>Direct-to-Source Links</h3>
+                    <p>Scrapes Class Central for provider's page links for easy enrollment.</p>
+                </article>
+
+                <article class="feature-card" tabindex="0" aria-label="Comprehensive Course Insights">
+                    <div class="feature-icon" aria-hidden="true">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Comprehensive Course Insights</h3>
+                    <p>Includes workload, dates, pricing, certifications and more.</p>
+                </article>
+
+                <article class="feature-card" tabindex="0" aria-label="Smart Scoring Algorithm">
+                    <div class="feature-icon" aria-hidden="true">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Smart Scoring Algorithm</h3>
+                    <p>Class Central + Reddit sentiment = balanced ranking.</p>
+                </article>
+
+
+                <article class="feature-card" tabindex="0" aria-label="Scalable & Future-Ready">
+                    <div class="feature-icon" aria-hidden="true">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Scalable &amp; Future-Ready</h3>
+                    <p>Modular Python backend, easy integrations with other services.</p>
+                </article>
+
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Enroll Section -->
+    <section class="enroll" aria-label="Enrollment Section">
+        <div class="container">
+                        <h2>Find what you want to learn and explore</h2>
+                        <p>Begin your learning journey with AI-powered guidance and comprehensive course recommendations.</p>
+                        {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('dashboard') }}" class="btn">Go to Dashboard</a>
+                        {% else %}
+                            <a href="{{ url_for('login') }}" class="btn">Get Started</a>
+                        {% endif %}
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team" id="Team" aria-label="Team Section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Made By Team Genix</h2>
+                <p class="motivation">"Empowering learners, shaping futures."</p>
+            </div>
+
+            <div class="team-members">
+                <article class="team-member" tabindex="0" aria-label="Team Member Khushi Roy">
+                    <img src="{{ url_for('static', filename='images/khushi.jpeg') }}" alt="Khushi Roy" />
+                    <h3>Khushi Roy</h3>
+                </article>
+
+                <article class="team-member" tabindex="0" aria-label="Team Member Maddala Jashwanth">
+                    <img src="{{ url_for('static', filename='images/jash.jpeg') }}" alt="Maddala Jashwanth" />
+                    <h3>Maddala Jashwanth</h3>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <section class="footer-info" aria-label="Footer Information">
+                    <div class="footer-logo">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="LearnAI Logo" />
+                        <div class="logo-text">LearnAI</div>
+                    </div>
+                    <p>Your AI-powered learning companion</p>
+                </section>
+
+                <nav class="footer-links" aria-label="Footer Quick Links">
+                    <div class="nav-links">
+                        <a href="#Home">Home</a>
+                        <a href="#Features">Features</a>
+                        <a href="#Team">Team</a>
+                </nav>
+
+                <section class="contact-info" aria-label="Contact Information">
+                    <h3>Contact Us</h3>
+                    <p>Email: khushinroy@gmail.com</p>
+                </section>
+            </div>
+
+            <div class="copyright">
+                <p>Made by Team Genix</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animate feature cards on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const featureCards = document.querySelectorAll('.feature-card');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            featureCards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(30px)';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+
+</html>
