@@ -2,8 +2,4 @@ Flask
 Flask-SQLAlchemy
 Flask-Login
 python-dotenv
-PyFPDF
-pandas
-numpy
-gunicorn
-python-dateutil
+fpdf2
