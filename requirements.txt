@@ -6,4 +6,4 @@ fpdf2==2.8.4
 requests==2.32.3
 beautifulsoup4==4.13.3
 praw==7.7.1
-vaderSentiment==3.3.2  # Use the latest available version
+vaderSentiment==3.3.2
