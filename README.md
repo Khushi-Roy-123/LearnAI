@@ -58,18 +58,6 @@ An **AI-powered all-in-one learning hub** that discovers the best courses, build
 
 ---
 
-## ⚙️ System Architecture  
-
-```mermaid
-graph TD
-A[User] --> B[Frontend - React.js]
-B --> C[Backend - Node.js/Express]
-C --> D[Database - MongoDB]
-C --> E[AI Layer - OpenAI + NLP Models]
-E --> F[Roadmaps, Recommendations, Mentor Chat]
-
----
-
 ##🚀 Getting Started
 
 # Clone repository
@@ -94,7 +82,7 @@ npm start
 
 ## 👨‍💻 Authors  
 
-- **M Jashwanth** 
+- **M Jashwanth**  
 - **Khushi Roy** 
 
 ---
